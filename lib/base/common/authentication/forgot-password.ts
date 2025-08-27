@@ -15,6 +15,7 @@ import { supabaseClientMain } from "@/lib/base/supabase"
 
 interface IResetPassword {
     redirectLink: string;
+    email:string;
 }
 
 /**
@@ -24,7 +25,7 @@ interface IResetPassword {
 export async function resetPassword(options:IResetPassword) {
 
     const {data : {user}} = await supabaseClientMain.auth.getUser();
-    await supabaseClientMain.auth.resetPasswordForEmail(user!.email!, { redirectTo: options.redirectLink, })
+    return await supabaseClientMain.auth.resetPasswordForEmail(options.email, { redirectTo: options.redirectLink, })
 }
 
 interface IUpdatePassword {

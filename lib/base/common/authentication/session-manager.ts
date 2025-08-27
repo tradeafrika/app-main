@@ -9,6 +9,6 @@
 import { supabaseClientMain } from "@/lib/base/supabase";
 
 export async function checkCurrentUserSession() {
-    return supabaseClientMain.auth.getUser();
+    return (await supabaseClientMain.auth.getUser()).data;
 }
 

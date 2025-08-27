@@ -1,30 +1,46 @@
 /**
- * Used to sign In the user 
+ * Used to sign In the user
  */
 
-
-import { supabaseClientMain } from "@/lib/base/supabase";
-
+import { supabaseClientMain } from '@/lib/base/supabase'
 
 /**
  * Used to Sign In User the normal Way
  */
 
 interface ISignInUser {
-    email:string;
-    password:string;
+    email: string
+    password: string
 }
 
-export async function signInUser(options:ISignInUser) {
-    const { data, error } = await supabaseClientMain.auth.signInWithPassword
-        ({
-            email: options.email,
-            password: options.password,
-        })
+interface ISiginInResponse {
+    isErrorTrue: boolean
+    isDataAvailable: boolean
+    data: any
+    errorMessage: string
+}
 
-        if(error){
-            console.log("Error Signing user...")
+export async function signInUser(options: ISignInUser): Promise<ISiginInResponse> {
+    const { data, error } = await supabaseClientMain.auth.signInWithPassword({
+        email: options.email,
+        password: options.password,
+    })
+
+    if (error) {
+        return {
+            data: {},
+            errorMessage: error.message,
+            isDataAvailable: false,
+            isErrorTrue: true,
         }
+    } else {
+        return {
+            data: data,
+            errorMessage: '',
+            isDataAvailable: true,
+            isErrorTrue: false,
+        }
+    }
 }
 
 /**
@@ -32,20 +48,30 @@ export async function signInUser(options:ISignInUser) {
  */
 
 interface IGoogleAuthentication {
-    redirectURL:string;
+    redirectURL: string
 }
 
-export async function signInWithGoogle(options:IGoogleAuthentication) {
+export async function signInWithGoogle(options: IGoogleAuthentication): Promise<ISiginInResponse> {
     const { data, error } = await supabaseClientMain.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: options.redirectURL
-        }
+            redirectTo: options.redirectURL,
+        },
     })
 
     if (error) {
-        console.error('Google login error:', error.message)
+        return {
+            data: {},
+            errorMessage: error.message,
+            isDataAvailable: false,
+            isErrorTrue: true,
+        }
     } else {
-        console.log('Redirecting to Google login...', data)
+        return {
+            data: data,
+            errorMessage: '',
+            isDataAvailable: true,
+            isErrorTrue: false,
+        }
     }
 }
