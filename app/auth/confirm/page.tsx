@@ -1,14 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabaseClientMain } from '@/lib/base/supabase'
-import { toast } from 'sonner'
 
 type ConfirmationState = 'loading' | 'success' | 'error' | 'expired'
 
-
-const EmailConfirmation: React.FC = () => {
+export default function EmailConfirmationPage() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [state, setState] = useState<ConfirmationState>('loading')
@@ -20,7 +18,7 @@ const EmailConfirmation: React.FC = () => {
 
     useEffect(() => {
         const confirmEmail = async () => {
-            const token = searchParams.get('access_token') // Supabase sends this, not token_hash
+            const token = searchParams.get('access_token')
             const type = searchParams.get('type')
 
             if (!token || !type) {
@@ -30,22 +28,17 @@ const EmailConfirmation: React.FC = () => {
             }
 
             try {
-                // Exchange access_token for a session
-                const { data, error } = await supabase.auth.exchangeCodeForSession(token)
+                const { error } = await supabase.auth.exchangeCodeForSession(token)
 
                 if (error) {
-                    setState('error')
-                    if (error.message.toLowerCase().includes('expired')) {
-                        setState('expired')
-                        setErrorMessage('This confirmation link has expired. Please request a new one.')
-                    } else {
-                        setErrorMessage(error.message || 'Failed to confirm your email. Please try again.')
-                    }
+                    setState(error.message.toLowerCase().includes('expired') ? 'expired' : 'error')
+                    setErrorMessage(
+                        error.message.toLowerCase().includes('expired')
+                            ? 'This confirmation link has expired. Please request a new one.'
+                            : error.message || 'Failed to confirm your email. Please try again.'
+                    )
                 } else {
                     setState('success')
-                    
-
-                    // Start countdown and redirect
                     const timer = setInterval(() => {
                         setCountdown((prev) => {
                             if (prev <= 1) {
@@ -57,7 +50,7 @@ const EmailConfirmation: React.FC = () => {
                         })
                     }, 1000)
                 }
-            } catch (err) {
+            } catch {
                 setState('error')
                 setErrorMessage('An unexpected error occurred. Please try again.')
             }
@@ -66,7 +59,6 @@ const EmailConfirmation: React.FC = () => {
         confirmEmail()
     }, [searchParams, supabase, router, redirectTo])
 
-  
     const renderContent = () => {
         switch (state) {
             case 'loading':
@@ -86,5 +78,3 @@ const EmailConfirmation: React.FC = () => {
         </div>
     )
 }
-
-export default EmailConfirmation
