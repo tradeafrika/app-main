@@ -10,13 +10,16 @@ export default function ForgotPasswordComponent() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
+        toast.success('Authentication', {
+            description: 'Processing Reset...',
+        })
 
         resetPassword({
             email: email,
             redirectLink: `${baseURL}/auth/reset-password`,
-        }).then(()=>{
-            toast.success("Authenticaton", {
-                description : 'A Password reset link has been sent to your Email'
+        }).then(() => {
+            toast.success('Authenticaton', {
+                description: 'A Password reset link has been sent to your Email',
             })
         })
     }

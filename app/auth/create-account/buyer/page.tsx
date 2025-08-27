@@ -29,6 +29,9 @@ const CreateAccountForm: React.FC = () => {
             alert('Passwords do not match!')
             return
         }
+        toast.success("Authentication", {
+            description : "Creating Account..."
+        })
 
         let { firstName, lastName } = splitFullName(fullname)
         createNewUser({

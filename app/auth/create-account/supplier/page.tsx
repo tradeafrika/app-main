@@ -166,7 +166,9 @@ export default function CreateAccountSupplier() {
 
         if (validateForm()) {
             console.log('Form submitted:', formData)
-
+            toast.success('Authentication', {
+                description: 'Creating Account...',
+            })
             const { firstName, lastName } = splitFullName(formData.fullName)
 
             createNewUserWithCompanyProfile({
