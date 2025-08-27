@@ -7,12 +7,8 @@ import { toast } from 'sonner'
 
 type ConfirmationState = 'loading' | 'success' | 'error' | 'expired'
 
-interface EmailConfirmationProps {
-    onSuccess?: () => void
-    redirectTo?: string
-}
 
-const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ onSuccess, redirectTo = '/marketplace' }) => {
+const EmailConfirmation: React.FC = () => {
     const router = useRouter()
     const searchParams = useSearchParams()
     const [state, setState] = useState<ConfirmationState>('loading')
@@ -20,6 +16,7 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ onSuccess, redire
     const [countdown, setCountdown] = useState(3)
 
     const supabase = supabaseClientMain
+    const redirectTo = '/marketplace'
 
     useEffect(() => {
         const confirmEmail = async () => {
@@ -46,7 +43,7 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ onSuccess, redire
                     }
                 } else {
                     setState('success')
-                    if (onSuccess) onSuccess()
+                    
 
                     // Start countdown and redirect
                     const timer = setInterval(() => {
@@ -67,7 +64,7 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({ onSuccess, redire
         }
 
         confirmEmail()
-    }, [searchParams, supabase, router, onSuccess, redirectTo])
+    }, [searchParams, supabase, router, redirectTo])
 
   
     const renderContent = () => {
