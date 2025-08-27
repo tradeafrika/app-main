@@ -6,7 +6,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { CircleX, Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 
 import Link from 'next/link'
 import { signInUser, signInWithGoogle } from '@/lib/base/common/authentication/signin-user'
@@ -27,25 +27,23 @@ export default function SignInForm() {
             signInUser({
                 email: email,
                 password: password,
-            }).then((args)=>{
-                if(args.isErrorTrue){
-                    console.log('Error Signing In User',args.errorMessage)
+            }).then((args) => {
+                if (args.isErrorTrue) {
+                    console.log('Error Signing In User', args.errorMessage)
 
-                    toast("Authentication Failed",{
-                        richColors : true,
-                        style : {
-                            fontSize  :14,
-                            padding: 10
+                    toast('Authentication Failed', {
+                        richColors: true,
+                        style: {
+                            fontSize: 14,
+                            padding: 10,
                         },
-                        description : "Invalid Login Credentials."
+                        description: 'Invalid Login Credentials.',
                     })
-                }else{
+                } else {
                     console.log('User Details', args.data)
                 }
             })
-        } catch (error) {
-           
-        }
+        } catch (error) {}
     }
 
     /**
@@ -65,7 +63,6 @@ export default function SignInForm() {
 
     return (
         <div className="min-h-screen flex p-1 justify-center">
-            
             <div className="max-w-md w-full p-3">
                 <div className="mb-8 flex-col justify-center  pl-4 h-[40px]">
                     <h1 className="text-2xl font-light mb-2 text-gray-900 mt-2">Sign In to TradeAfrika.</h1>

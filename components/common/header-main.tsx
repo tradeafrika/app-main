@@ -1,17 +1,16 @@
-import { Bell, Clock, MessageSquare, Search, User } from "lucide-react"
-import { useState } from "react"
-import LogoCT from "../auth/logo-ct"
+import { Bell, Clock, MessageSquare, Search, User } from 'lucide-react'
+import { useState } from 'react'
+import LogoCT from '../auth/logo-ct'
+import { supabaseClientMain } from '@/lib/base/supabase'
 
 /**
- * 
+ *
  * Header component
- * @returns 
- * 
+ * @returns
+ *
  */
 
 const Header = () => {
-
-
     const [isSellerMode, setIsSellerMode] = useState(false)
     const [searchQuery, setSearchQuery] = useState('')
     const [showUserMenu, setShowUserMenu] = useState(false)
@@ -20,6 +19,16 @@ const Header = () => {
         { id: 1, type: 'quote', message: 'New quote request for Cocoa Beans', time: '2 min ago', unread: true },
         { id: 2, type: 'order', message: 'Order #TB001 has been shipped', time: '1 hour ago', unread: false },
     ])
+
+    const signOutUser = () => {
+        supabaseClientMain.auth.signOut().then((v) => {
+            if (v.error) {
+                console.log('Error signing out user', v.error.message)
+            }
+
+            console.log('Did Logout user')
+        })
+    }
 
     const unreadNotifications = notifications.filter((n) => n.unread).length
 
@@ -30,7 +39,7 @@ const Header = () => {
                     {/* Logo and Brand */}
                     <div className="flex items-center space-x-6">
                         <div className="flex items-center cursor-pointer">
-                            <LogoCT/>
+                            <LogoCT />
                         </div>
 
                         {/* Mode Toggle */}
@@ -132,22 +141,39 @@ const Header = () => {
                                         <div className="text-xs text-green-600 mt-1">✓ Verified Buyer</div>
                                     </div>
                                     <div className="py-2">
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50">
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50"
+                                        >
                                             My Dashboard
                                         </a>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50">
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50"
+                                        >
                                             Order History
                                         </a>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50">
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50"
+                                        >
                                             Saved Products
                                         </a>
-                                        <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50">
+                                        <a
+                                            href="#"
+                                            className="block px-4 py-2 text-sm text-gray-700 font-light hover:bg-gray-50"
+                                        >
                                             Settings
                                         </a>
                                         <hr className="my-2" />
-                                        <a href="#" className="block px-4 py-2 text-sm text-red-600 font-light hover:bg-gray-50">
+                                        <div
+                                            onClick={(e) => {
+                                                signOutUser()
+                                            }}
+                                            className="block px-4 py-2 text-sm text-red-600 font-light hover:bg-gray-50"
+                                        >
                                             Sign Out
-                                        </a>
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -159,5 +185,4 @@ const Header = () => {
     )
 }
 
-
-export default Header;
+export default Header
